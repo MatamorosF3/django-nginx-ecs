@@ -1,0 +1,13 @@
+{% extends 'products/base.html' %}
+
+{% block content %}
+<h1>Index for products</h1>
+
+-----------Products inside database--------
+{% for product in products %}
+<li>
+{{product.id}} -  <a href="{% url 'products:detail' product.id %}">{{product.title}}</a>
+
+</li>
+{% endfor %}
+{% endblock %}
