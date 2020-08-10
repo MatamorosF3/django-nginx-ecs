@@ -18,11 +18,11 @@ phases:
       - cd ytdjango
       - echo Building the Docker image for django app...
       - docker build -t $REPOSITORY_URI:latest-django .
-      - docker tag $REPOSITORY_URI:latest-django $REPOSITORY_URI:$IMAGE_TAG_DJANGO
+      - docker tag $REPOSITORY_URI:latest-django $REPOSITORY_URI:django-$IMAGE_TAG_DJANGO
       - echo moving to nginx folder
       - cd ../nginx-ytdjango
       - docker build -t $REPOSITORY_URI:latest-nginx .
-      - docker tag $REPOSITORY_URI:latest-nginx $REPOSITORY_URI:$IMAGE_TAG_NGINX
+      - docker tag $REPOSITORY_URI:latest-nginx $REPOSITORY_URI:nginx-$IMAGE_TAG_NGINX
   post_build:
     commands:
       - echo Build completed on `date`
@@ -32,7 +32,7 @@ phases:
       - docker push $REPOSITORY_URI:latest-nginx
       - docker push $REPOSITORY_URI:$IMAGE_TAG_NGINX
       - echo Writing image deinitions file...
-      - printf '[{"name":"ytdjango","imageUri":"%s"},{"name":"nginx-ytdjango","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG_DJANGO $REPOSITORY_URI:$IMAGE_TAG_NGINX > imagedefinitions.json
+      - printf '[{"name":"ytdjango","imageUri":"%s"},{"name":"nginx-ytdjango","imageUri":"%s"}]' $REPOSITORY_URI:django-$IMAGE_TAG_DJANGO $REPOSITORY_URI:nginx-$IMAGE_TAG_NGINX > imagedefinitions.json
       - cat imagedefinitions.json
 artifacts:
     files: imagedefinitions.json
