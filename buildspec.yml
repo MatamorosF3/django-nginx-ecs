@@ -22,7 +22,7 @@ phases:
       - echo moving to nginx folder
       - cd ../nginx-ytdjango
       - docker build -t $REPOSITORY_URI:latest-nginx .
-      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG_NGINX
+      - docker tag $REPOSITORY_URI:latest-nginx $REPOSITORY_URI:$IMAGE_TAG_NGINX
   post_build:
     commands:
       - echo Build completed on `date`
