@@ -23,6 +23,7 @@ phases:
       - cd ../nginx-ytdjango
       - docker build -t $REPOSITORY_URI:latest-nginx .
       - docker tag $REPOSITORY_URI:latest-nginx $REPOSITORY_URI:nginx-$IMAGE_TAG_NGINX
+      - cd ../
   post_build:
     commands:
       - echo Build completed on `date`
