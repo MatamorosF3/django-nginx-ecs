@@ -1,0 +1,38 @@
+  
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws --version
+      - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
+      - REPOSITORY_URI=152312999093.dkr.ecr.us-east-2.amazonaws.com/django-nginx
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG_DJANGO=${COMMIT_HASH:=latest-django}
+      - IMAGE_TAG_NGINX=${COMMIT_HASH:=latest-nginx}
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo move to django app folder
+      - cd ytdjango
+      - echo Building the Docker image for django app...
+      - docker build -t $REPOSITORY_URI:latest-django .
+      - docker tag $REPOSITORY_URI:latest-django $REPOSITORY_URI:$IMAGE_TAG_DJANGO
+      - echo moving to nginx folder
+      - cd ../nginx-ytdjango
+      - docker build -t $REPOSITORY_URI:latest-nginx .
+      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG_NGINX
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker images...
+      - docker push $REPOSITORY_URI:latest-django
+      - docker push $REPOSITORY_URI:$IMAGE_TAG_DJANGO
+      - docker push $REPOSITORY_URI:latest-nginx
+      - docker push $REPOSITORY_URI:$IMAGE_TAG_NGINX
+      - echo Writing image deinitions file...
+      - printf '[{"name":"ytdjango","imageUri":"%s"},{"name":"nginx-ytdjango","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG_DJANGO $REPOSITORY_URI:$IMAGE_TAG_NGINX > imagedefinitions.json
+      - cat imagedefinitions.json
+artifacts:
+    files: imagedefinitions.json
