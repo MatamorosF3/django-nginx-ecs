@@ -38,7 +38,7 @@ def index(request):
 
 def product_create_view(request):
   initial_values = {'title': 'initial default'}
-  obj = Product.objects.get(id=1)
+  #obj = Product.objects.get(id=1)
   form = ProductForm(request.POST or None, initial=initial_values)
   # form = ProductForm(request.POST or None, instance=obj)
 
