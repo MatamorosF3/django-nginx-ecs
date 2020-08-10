@@ -28,9 +28,9 @@ phases:
       - echo Build completed on `date`
       - echo Pushing the Docker images...
       - docker push $REPOSITORY_URI:latest-django
-      - docker push $REPOSITORY_URI:$IMAGE_TAG_DJANGO
+      - docker push $REPOSITORY_URI:django-$IMAGE_TAG_DJANGO
       - docker push $REPOSITORY_URI:latest-nginx
-      - docker push $REPOSITORY_URI:$IMAGE_TAG_NGINX
+      - docker push $REPOSITORY_URI:nginx-$IMAGE_TAG_NGINX
       - echo Writing image deinitions file...
       - printf '[{"name":"ytdjango","imageUri":"%s"},{"name":"nginx-ytdjango","imageUri":"%s"}]' $REPOSITORY_URI:django-$IMAGE_TAG_DJANGO $REPOSITORY_URI:nginx-$IMAGE_TAG_NGINX > imagedefinitions.json
       - cat imagedefinitions.json
